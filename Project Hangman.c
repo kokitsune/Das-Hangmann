@@ -215,7 +215,17 @@ int man(int life)/*Print a picture of a hangman*/
 	}
 }
 
-int check(char input[51], char word[51])/*Excerpt from Python's "Find"*/
+int check(char input[], char word[])/*Excerpt from Python's "Find"*/
 {
+	int i=0;
 	
+	for(i;i<strlen(word);i++)
+	{
+		if(input == word[i])
+		{
+			return 1;
+		}
+		
+	}
+	return 0;
 }
