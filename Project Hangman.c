@@ -6,6 +6,12 @@
 /*Best of Luck*/
 void main(void)
 {
+	printf("1.Single Player\n");
+	printf("2.Multiplayer\n");
+	printf("3.Create Mode\n");
+	printf("4.Scores\n");
+	printf("5.Credit\n");
+	printf("6.Quit\n");
 	char input[2];
 	while(1)
 	{
