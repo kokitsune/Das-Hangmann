@@ -81,7 +81,7 @@ int create()
 
 int edit(int mode, char massive[], char filename[])/*Load and edit things*/ /*Forbid * , + */
 {
-	int i=0;
+	int i=0,j=0;
 	char current[101]="";
 	char input_save[101]="";
 	int tnum=1, vocnum=1, tto=0, vocto[11]={0};
@@ -90,46 +90,47 @@ int edit(int mode, char massive[], char filename[])/*Load and edit things*/ /*Fo
 	char title[11][51]={""};
 	char desc[11][101]={""};
 	
-	while(mode==1)/*Load things*/
+	if(mode==1)/*Load things*/
 	{
-		current[strlen(current)]=massive[i];
-		current[501]='\0';
-		if(strcmp(current, "+"))
+		if(massive[0]=='+')
 		{
-			while(massive[i]!='*'&&massive[i+1]!='*')/*Get Title*/
+			while(!(massive[i]=='*'&&massive[i+1]=='*'))/*Get Title*/
 			{
 				strcpy(current, "");
-				for(i++;i<strlen(massive) || massive[i]!='+'; i++)/*Title*/
+				for(i+=1;!((i>=strlen(massive)) || (massive[i]=='+')); i++)/*Title*/
 				{
 					current[strlen(current)]=massive[i];
 				}
-				current[501]='\0';
+				current[101]='\0';
 				strcpy(title[tnum], current);
-				strcpy(current, "");
-				for(i++;i<strlen(massive) || massive[i]!='+'; i++)/*Description*/
+				memset(current,0,strlen(current));
+				for(i+=1;!((i>=strlen(massive)) || (massive[i]=='+')); i++)/*Description*/
 				{
 					current[strlen(current)]=massive[i];
 				}
-				current[501]='\0';
+				current[101]='\0';
 				strcpy(desc[tnum], current);
-				strcpy(current, "");
-				while
-					for(i++;i<strlen(massive) || massive[i]!='+'; i++)/*Vocab*/
+				memset(current,0,strlen(current));
+				while(massive[i]!='*'){
+					for(i+=1;!((i>=strlen(massive)) || (massive[i]=='+')); i++)/*Vocab*/
 					{
 						current[strlen(current)]=massive[i];
 					}
-					current[501]='\0';
+					current[101]='\0';
 					strcpy(vocab[tnum][vocnum], current);
-					strcpy(current, "");
-					for(i++;i<strlen(massive) || massive[i]!='+'; i++)/*Hint*/
+					memset(current,0,strlen(current));
+					for(i+=1;!((i>=strlen(massive)) || (massive[i]=='+') || (massive[i]=='*')); i++)/*Hint*/
 					{
 						current[strlen(current)]=massive[i];
 					}
-					current[501]='\0';
+					current[101]='\0';
 					strcpy(hint[tnum][vocnum], current);
-					strcpy(current, "");
-				
-				
+					memset(current,0,strlen(current));
+					vocto[tnum]++;
+					vocnum++;}
+				vocnum=1;
+				tto++;
+				tnum++;
 			}
 		}
 		else
@@ -137,17 +138,31 @@ int edit(int mode, char massive[], char filename[])/*Load and edit things*/ /*Fo
 			printf("Invalid Files.");
 			return 0;
 		}
+		for(i=1;i<=tto;i++)/*Debug Only*//*Remove this when release.*/
+		{
+			printf("%s\n",title[i]);
+			printf("%s\n",desc[i]);
+			for(j=1;j<=vocto[i];j++)
+			{
+				printf("%s",vocab[i][j]);
+				printf(" --> %s\n",hint[i][j]);
+			}
+		}
 	}
 	while(1)
 	{
-		fgets (current, 51, stdin);
+		printf("File Menu\n");
+		printf("new: Create a New category\n");
+		printf("edit: Edit existing category\n");
+		printf("remove: Remove a category\n");
+		fgets (current, 101, stdin);
 		current[strcspn(current, "\n")] = 0;
 		if(strcmp(current, "new")==0);
 		{
 			while(strcmp(current, "back")!=0)
 			{
 				printf("Insert Category Name: ");
-				fgets (current, 51, stdin);
+				fgets (current, 101, stdin);
 				current[strcspn(current, "\n")] = 0;
 				strcpy(title[tnum], current);
 			}
@@ -157,7 +172,7 @@ int edit(int mode, char massive[], char filename[])/*Load and edit things*/ /*Fo
 			while(strcmp(current, "back")!=0)
 			{
 				printf("Type in Category number: ");
-				fgets (current, 51, stdin);
+				fgets (current, 101, stdin);
 				current[strcspn(current, "\n")] = 0;
 				if(strcmp(current, "back"))
 				{
