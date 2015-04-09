@@ -244,7 +244,7 @@ int play(unsigned int mode, unsigned int category, char vocab[][][], char hint[]
 
 void clear(void)/*clear screen. please measure screen first.*/
 {
-	printf("/n/n/n/n/n/n/n/n/n/n/n/n/n/n/n/n/n/n/n/n/n/n/n");
+	system("cls");
 }
 
 int man(int life)/*Print a picture of a hangman*/
@@ -275,6 +275,22 @@ int check(char input[], char word[])/*Excerpt from Python's "Find"*/
 			return 1;
 		}
 		
+	}
+	return 0;
+}
+
+int in(char string[], char cha[])/*If any character of cha in string, return 1*/ /*Excerpt from Python's in*/
+{
+	int i=0, j;
+	for(i;i<strlen(cha); i++)
+	{
+		for(j=0;j<strlen(string);j++)
+		{
+			if(string[j]==cha[i])
+			{
+				return 1;
+			}
+		}
 	}
 	return 0;
 }
