@@ -164,82 +164,101 @@ int play(unsigned int mode, unsigned int category, char vocab[][][], char hint[]
 	}
 	elif(mode==2)/*Multiplayer*/
 	{
-	char word[51];
-	fgets (word, 51, stdin);
-	word[strcspn(word, "\n")] = 0;
-	char now[strlen(word)+1];
-	int i=0,check=0,life=0,pop=0;
-	for(i=0;i<strlen(word);i++)
-		now[i]='_';
-	char input[3];
-	
-	do
-	{
-		i=0;
+		int score=40,life=0,all=0,j=0,k=0;
+		char word[51],alpha[26]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'},state[51];
+		while(life<9){
 		
-
-		for(i;i<strlen(word);i++)
-		{
-			if(input[0] == word[i])
+			fgets (word, 51, stdin);
+			for(j;j<strlen(word)-1;j++)
 			{
-				now[i]=input[0];
-				check++;
-				pop=1;
-			}	
-			else 
-			if (word[i] == ' ')
-			{
-				now[i]=' ';
-			}
-			else
-			{	
+				if(word[j]>96 && word[j]<123)
+				{
+					state[j]='1';
+				}
+				else
+					state[j]='0';
+					strcpy(word,"");
+					break;
 				
-			}
+			}			
+			word[strcspn(word, "\n")] = 0;
+			char now[strlen(word)+1];
+			int i=0,check=0,pop=0;
+			for(i=0;i<strlen(word);i++)
+				now[i]='_';
+				char input[3];
+						
+			do
+			{
+				i=0;
+							
+				for(i;i<strlen(word);i++)
+				{
+					if(input[0] == word[i])
+					{
+						now[i]=input[0];
+						check++;
+						pop=1;
+					}	
+					else 
+						if (word[i] == ' ')
+						{
+							now[i]=' ';
+						}
+					else
+						{	
+									
+						}
+				}
+				if(!pop)
+				{
+					life++;
+					pop=0;
+				}
+					
+				i=0;
+				for(i;i<strlen(word);i++)
+				{
+					if(now[i] == '_')
+					{
+						printf(" _ ");
+					}
+					else if (now[i] == ' ')
+					{
+						printf("   ");
+					}
+					else /*if (word[i] == '-')*/
+					{
+						printf("   ");
+					}				
+				}
+				printf("\n");
+						
+				for(i=0;i<strlen(word);i++)
+				{
+					if(now[i]== '_')
+					{
+						printf("|_|");					
+					}
+					else if (now[i] == ' ')
+					{
+						printf("   ");
+					}
+					else
+					{
+						printf(" %c ",word[i]);
+					}
+				}
+				printf("\n");
+				printf("\n");
+				strcpy(input,"");
+				if (!(check>=strlen(word) || life >=9))
+					fgets (input, 3 , stdin);
+				}while (!(check>=strlen(word) || life >=9  ));
+				all+=score-(life*5)+5;
+				printf("Score %d\n\n",all);
+				life=0;	
 		}
-		if(!pop)
-		{
-			life++;
-			pop=0;
-		}
-
-		i=0;
-		for(i;i<strlen(word);i++)
-		{
-			if(now[i] == '_')
-			{
-				printf(" _ ");
-			}
-			else if (now[i] == ' ')
-			{
-				printf("   ");
-			}
-			else /*if (word[i] == '-')*/
-			{
-				printf("   ");
-			}
-		}
-		printf("\n");
-	
-		for(i=0;i<strlen(word);i++)
-		{
-			if(now[i]== '_')
-			{
-				printf("|_|");
-			}
-			else if (now[i] == ' ')
-			{
-				printf("   ");
-			}
-			else
-			{
-				printf(" %c ",word[i]);
-			}
-		}
-		printf("\n");
-		printf("\n");
-		if (!(check>=strlen(word) || life >=10))
-			fgets (input, 3 , stdin);
-	}while (!(check>=strlen(word) || life >=10));
 }
 
 void clear(void)/*clear screen. please measure screen first.*/
