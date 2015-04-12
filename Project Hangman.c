@@ -164,57 +164,55 @@ int play(unsigned int mode, unsigned int category, char vocab[][][], char hint[]
 	}
 	elif(mode==2)/*Multiplayer*/
 	{
-		int score=40,life=0,all=0,j=0,k=0;
-		char word[51],alpha[26]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'},state[51];
-		while(life<9){
-		
-			fgets (word, 51, stdin);
-			for(j;j<strlen(word)-1;j++)
+	int score=40,life=0,all=0,j=0,k=0,stat=1;
+	char word[51],alpha[26]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'},state[51],exit;
+	while(life<9){
+	
+		printf("Please insert your word: ");
+		fgets (word, 51, stdin);
+		clear();
+			
+		word[strcspn(word, "\n")] = 0;
+		char now[strlen(word)+1];
+		int i=0,check=0,pop=0;
+		int myalpha[26]={0}, length;
+		length=strlen(word);
+		for(i=0;i<strlen(word);i++){
+			now[i]='_';
+			if (tolower(word[i])<97 || tolower(word[i])>122)
 			{
-				if(word[j]>96 && word[j]<123)
-				{
-					state[j]='1';
-				}
-				else
-					state[j]='0';
-					strcpy(word,"");
-					break;
-				
-			}			
-			word[strcspn(word, "\n")] = 0;
-			char now[strlen(word)+1];
-			int i=0,check=0,pop=0;
-			for(i=0;i<strlen(word);i++)
-				now[i]='_';
-				char input[3];
-						
+				now[i]=word[i];
+				length--;
+			}
+		}
+		char input[3]="";
+		stat=1;
+		if (count_alpha(word)==0){
+			printf("\nYour word must have at least 1 character.\n\n");stat=0;}
+		else
+		{
 			do
 			{
 				i=0;
 							
 				for(i;i<strlen(word);i++)
 				{
-					if(input[0] == word[i])
+					if(tolower(input[0]) == tolower(word[i]))
 					{
 						now[i]=input[0];
 						check++;
 						pop=1;
+						clear();
 					}	
-					else 
-						if (word[i] == ' ')
-						{
-							now[i]=' ';
-						}
-					else
-						{	
-									
-						}
 				}
-				if(!pop)
+				if(!pop && strlen(input))
 				{
 					life++;
-					pop=0;
+					printf("\nWrong. Wrong. WRONG!\n");
+					clear();
 				}
+				pop=0;
+				printf("\nCurrently the question is..\n");
 					
 				i=0;
 				for(i;i<strlen(word);i++)
@@ -249,17 +247,48 @@ int play(unsigned int mode, unsigned int category, char vocab[][][], char hint[]
 						printf(" %c ",word[i]);
 					}
 				}
+				
 				printf("\n");
 				printf("\n");
 				strcpy(input,"");
-				if (!(check>=strlen(word) || life >=9))
+				if (!(check>=length || life >=9)){
 					fgets (input, 3 , stdin);
-				}while (!(check>=strlen(word) || life >=9  ));
-				all+=score-(life*5)+5;
-				printf("Score %d\n\n",all);
-				life=0;	
+					input[strcspn(input, "\n")] = 0;
+					if(tolower(input[0])>96 && tolower(input[0])<123){
+					for(i=0;i<26;i++)
+					{
+						if(input[0]==alpha[i])
+						{
+							if(myalpha[i]==1)
+							{
+								strcpy(input,"");
+								printf("\nYou have already used this letter. Please choose again.\n");
+								clear();
+							}
+							else{
+								myalpha[i]=1;
+							}
+							break;
+						}
+					}
+					}
+					else{
+						printf("\nYou can only type English alphabets only. Please try again\n");
+						strcpy(input, "");
+						clear();
+					}
+				}
+			}while (!(check>=length || life >=9  ));
+				if(stat)
+				{
+					all+=score-(life*5);
+					printf("Score %d\n\n",all);
+				}
+				life=0;
 		}
+	}
 }
+
 
 void clear(void)/*clear screen. please measure screen first.*/
 {
@@ -312,4 +341,30 @@ int in(char string[], char cha[])/*If any character of cha in string, return 1*/
 		}
 	}
 	return 0;
+}
+
+int count_alpha(char word[])/*Return number of alphabet in string word*/
+{
+	int i=0,count=0;
+	for(i;i<strlen(word);i++)
+	{
+		if((word[i]>96 && word[i]<123) || (word[i]>=65 && word[i]<=90))
+		{
+			count++;
+		}
+	}		
+	return count;
+}
+
+int find(char string[], int cha)/*If cha in string, return index*/ /*Excerpt from Python's find*/
+{
+	int i=0;
+	for(i=0;i<strlen(string); i++)
+	{
+		if(string[i]==cha)
+		{
+			return i;
+		}
+	}
+	return -1;
 }
