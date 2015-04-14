@@ -164,10 +164,10 @@ int play(unsigned int mode, unsigned int category, char vocab[][][], char hint[]
 	}
 	elif(mode==2)/*Multiplayer*/
 	{
-	int score=40,life=0,all=0,j=0,k=0,stat=1;
-	char word[51],alpha[26]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'},state[51],exit;
+	int score=45,life=0,all=0,j=0,k=0,stat=1;
+	char word[51],alpha[26]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'},state[51];
 	while(life<9){
-	
+		
 		printf("Please insert your word: ");
 		fgets (word, 51, stdin);
 		clear();
@@ -212,37 +212,49 @@ int play(unsigned int mode, unsigned int category, char vocab[][][], char hint[]
 					clear();
 				}
 				pop=0;
+				printf("%s",man(life));
 				printf("\nCurrently the question is..\n");
 					
 				i=0;
-				for(i;i<strlen(word);i++)
+				if(!(life >=9 ))
 				{
-					if(now[i] == '_')
+					for(i;i<strlen(word);i++)
 					{
-						printf(" _ ");
+						if(now[i] == '_')
+						{
+							printf(" _ ");
+						}
+						else if (now[i] == ' ')
+						{
+							printf("   ");
+						}
+						else /*if (word[i] == '-')*/
+						{
+							printf("   ");
+						}				
 					}
-					else if (now[i] == ' ')
+					printf("\n");
+							
+					for(i=0;i<strlen(word);i++)
 					{
-						printf("   ");
+						if(now[i]== '_')
+						{
+							printf("|_|");					
+						}
+						else if (now[i] == ' ')
+						{
+							printf("   ");
+						}
+						else
+						{
+							printf(" %c ",word[i]);
+						}
 					}
-					else /*if (word[i] == '-')*/
-					{
-						printf("   ");
-					}				
 				}
-				printf("\n");
-						
-				for(i=0;i<strlen(word);i++)
+				else
 				{
-					if(now[i]== '_')
-					{
-						printf("|_|");					
-					}
-					else if (now[i] == ' ')
-					{
-						printf("   ");
-					}
-					else
+					printf("\n\n");
+					for(i=0;i<strlen(word);i++)
 					{
 						printf(" %c ",word[i]);
 					}
@@ -263,7 +275,6 @@ int play(unsigned int mode, unsigned int category, char vocab[][][], char hint[]
 							{
 								strcpy(input,"");
 								printf("\nYou have already used this letter. Please choose again.\n");
-								clear();
 							}
 							else{
 								myalpha[i]=1;
@@ -275,7 +286,6 @@ int play(unsigned int mode, unsigned int category, char vocab[][][], char hint[]
 					else{
 						printf("\nYou can only type English alphabets only. Please try again\n");
 						strcpy(input, "");
-						clear();
 					}
 				}
 			}while (!(check>=length || life >=9  ));
@@ -295,21 +305,431 @@ void clear(void)/*clear screen. please measure screen first.*/
 	system("cls");
 }
 
-int man(int life)/*Print a picture of a hangman*/
-{
-	if(life==0)/*Please measure screen size first*/
-	{
-		printf("\n");
-		printf("\n");
-		printf("\n");
-		printf("\n");
-		printf("= =\n");
-		printf(" w \n");
-		printf("\n");
-		printf("\n");
-		printf("\n");
-		printf("\n");
+int score=45,life=0,all=0,j=0,k=0,stat=1;
+	char word[51],alpha[26]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'},state[51];
+	while(life<9){
+		
+		printf("Please insert your word: ");
+		fgets (word, 51, stdin);
+		clear();
+			
+		word[strcspn(word, "\n")] = 0;
+		char now[strlen(word)+1];
+		int i=0,check=0,pop=0;
+		int myalpha[26]={0}, length;
+		length=strlen(word);
+		for(i=0;i<strlen(word);i++){
+			now[i]='_';
+			if (tolower(word[i])<97 || tolower(word[i])>122)
+			{
+				now[i]=word[i];
+				length--;
+			}
+		}
+		char input[3]="";
+		stat=1;
+		if (count_alpha(word)==0){
+			printf("\nYour word must have at least 1 character.\n\n");stat=0;}
+		else
+		{
+			do
+			{
+				i=0;
+							
+				for(i;i<strlen(word);i++)
+				{
+					if(tolower(input[0]) == tolower(word[i]))
+					{
+						now[i]=input[0];
+						check++;
+						pop=1;
+						clear();
+					}	
+				}
+				if(!pop && strlen(input))
+				{
+					life++;
+					printf("\nWrong. Wrong. WRONG!\n");
+					clear();
+				}
+				pop=0;
+				printf("%s",man(life));
+				printf("\nCurrently the question is..\n");
+					
+				i=0;
+				if(!(life >=9 ))
+				{
+					for(i;i<strlen(word);i++)
+					{
+						if(now[i] == '_')
+						{
+							printf(" _ ");
+						}
+						else if (now[i] == ' ')
+						{
+							printf("   ");
+						}
+						else /*if (word[i] == '-')*/
+						{
+							printf("   ");
+						}				
+					}
+					printf("\n");
+							
+					for(i=0;i<strlen(word);i++)
+					{
+						if(now[i]== '_')
+						{
+							printf("|_|");					
+						}
+						else if (now[i] == ' ')
+						{
+							printf("   ");
+						}
+						else
+						{
+							printf(" %c ",word[i]);
+						}
+					}
+				}
+				else
+				{
+					printf("\n\n");
+					for(i=0;i<strlen(word);i++)
+					{
+						printf(" %c ",word[i]);
+					}
+				}
+				
+				printf("\n");
+				printf("\n");
+				strcpy(input,"");
+				if (!(check>=length || life >=9)){
+					fgets (input, 3 , stdin);
+					input[strcspn(input, "\n")] = 0;
+					if(tolower(input[0])>96 && tolower(input[0])<123){
+					for(i=0;i<26;i++)
+					{
+						if(input[0]==alpha[i])
+						{
+							if(myalpha[i]==1)
+							{
+								strcpy(input,"");
+								printf("\nYou have already used this letter. Please choose again.\n");
+							}
+							else{
+								myalpha[i]=1;
+							}
+							break;
+						}
+					}
+					}
+					else{
+						printf("\nYou can only type English alphabets only. Please try again\n");
+						strcpy(input, "");
+					}
+				}
+			}while (!(check>=length || life >=9  ));
+				if(stat)
+				{
+					all+=score-(life*5);
+					printf("Score %d\n\n",all);
+				}
+				life=0;
+		}
 	}
+}
+
+int count_alpha(char word[])/*Return number of alphabet in string word*/
+{
+	int i=0,count=0;
+	for(i;i<strlen(word);i++)
+	{
+		if((word[i]>96 && word[i]<123) || (word[i]>=65 && word[i]<=90))
+		{
+			count++;
+		}
+	}		
+	return count;
+}
+
+int find(char string[], int cha)/*If cha in string, return index*/ /*Excerpt from Python's find*/
+{
+	int i=0;
+	for(i=0;i<strlen(string); i++)
+	{
+		if(string[i]==cha)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+void clear(void)/*clear screen. please measure screen first.*/
+{
+	system("cls");
+}
+
+int man(int in)
+{
+		
+		if (in == 1)
+		{
+		 printf("      **\n");
+		 printf("      **\n");
+		 printf("      **		            \n");
+		 printf("      **                            \n");
+		 printf("      **		           \n");							
+		 printf("      **		             \n");
+		 printf("      **		              \n");
+		 printf("      **		              \n");
+		 printf("      **	                     \n");
+		 printf("      **                           \n");
+		 printf("      **			 \n");
+		 printf("      **	                    \n");
+		 printf("      **	                     \n");
+		 printf("      **	                  	  \n");
+		 printf("      **                            \n");
+		 printf("      **                            \n");
+		 printf("      **	                  \n");
+		 printf("      **	                    \n");
+		 printf("      **                        \n");
+		 printf("      **                       \n");
+		 printf("      **\n");
+		 printf("     ****\n");
+	     printf("  **********\n");
+	     printf(" ************\n");
+         printf("**************\n\n");
+     	}
+		else if (in == 2)
+		{
+		 printf("      ********************************\n");
+		 printf("      ********************************\n");
+		 printf("      **		            \n");
+		 printf("      **                            \n");
+		 printf("      **		           \n");							
+		 printf("      **		            \n");
+		 printf("      **		              \n");
+		 printf("      **		              \n");
+		 printf("      **	                     \n");
+		 printf("      **                           \n");
+		 printf("      **			 \n");
+		 printf("      **	                \n");
+		 printf("      **	                    \n");
+		 printf("      **	                 	 \n");
+		 printf("      **                           \n");
+		 printf("      **                           \n");
+		 printf("      **	                  \n");
+		 printf("      **	                     \n");
+		 printf("      **                            \n");
+		 printf("      **                              \n");
+		 printf("      **\n");
+		 printf("     ****\n");
+	     printf("  **********\n");
+	     printf(" ************\n");
+         printf("**************\n\n");
+     	}
+		else if (in == 3)
+		{
+		 printf("      ********************************\n");
+		 printf("      ********************************\n");
+		 printf("      **		            **\n");
+		 printf("      **                            **\n");
+		 printf("      **		           \n");							
+		 printf("      **		         \n");
+		 printf("      **		        \n");
+		 printf("      **		        \n");
+		 printf("      **	                \n");
+		 printf("      **                         \n");
+		 printf("      **			 \n");
+		 printf("      **	                \n");
+		 printf("      **	               \n");
+		 printf("      **	              \n");
+		 printf("      **                          \n");
+		 printf("      **                          \n");
+		 printf("      **	                 \n");
+		 printf("      **	                 \n");
+		 printf("      **                     \n");
+		 printf("      **                      \n");
+		 printf("      **\n");
+		 printf("     ****\n");
+	     printf("  **********\n");
+	     printf(" ************\n");
+         printf("**************\n\n");
+     	}
+		else if (in == 4)
+		{
+		 printf("      ********************************\n");
+		 printf("      ********************************\n");
+		 printf("      **		            **\n");
+		 printf("      **                            **\n");
+		 printf("      **		           ****\n");							
+		 printf("      **		         **    **\n");
+		 printf("      **		        **      **\n");
+		 printf("      **		        **      **\n");
+		 printf("      **	                 **    **\n");
+		 printf("      **                           ****\n");
+		 printf("      **			 \n");
+		 printf("      **	                \n");
+		 printf("      **	               \n");
+		 printf("      **	              \n");
+		 printf("      **                           \n");
+		 printf("      **                          \n");
+		 printf("      **	                 \n");
+		 printf("      **	                 \n");
+		 printf("      **                        \n");
+		 printf("      **                       \n");
+		 printf("      **\n");
+		 printf("     ****\n");
+	     printf("  **********\n");
+	     printf(" ************\n");
+         printf("**************\n\n");
+     	}
+		else if (in == 5)
+		{
+		 printf("      ********************************\n");
+		 printf("      ********************************\n");
+		 printf("      **		            **\n");
+		 printf("      **                            **\n");
+		 printf("      **		           ****\n");							
+		 printf("      **		         **    **\n");
+		 printf("      **		        **      **\n");
+		 printf("      **		        **      **\n");
+		 printf("      **	                 **    **\n");
+		 printf("      **                           ****\n");
+		 printf("      **			    **\n");
+		 printf("      **	                    **  \n");
+		 printf("      **	                    **   \n");
+		 printf("      **	                    **	  \n");
+		 printf("      **                            **\n");
+		 printf("      **                            **\n");
+		 printf("      **	                    \n");
+		 printf("      **	                    \n");
+		 printf("      **                              \n");
+		 printf("      **                               \n");
+		 printf("      **\n");
+		 printf("     ****\n");
+	     printf("  **********\n");
+	     printf(" ************\n");
+         printf("**************\n\n");
+     	}
+		else if (in == 6)
+		{
+		 printf("      ********************************\n");
+		 printf("      ********************************\n");
+		 printf("      **		            **\n");
+		 printf("      **                            **\n");
+		 printf("      **		           ****\n");							
+		 printf("      **		         **    **\n");
+		 printf("      **		        **      **\n");
+		 printf("      **		        **      **\n");
+		 printf("      **	                 **    **\n");
+		 printf("      **                           ****\n");
+		 printf("      **			 *****\n");
+		 printf("      **	                **  **  \n");
+		 printf("      **	               **   **   \n");
+		 printf("      **	              **    **	  \n");
+		 printf("      **                            **\n");
+		 printf("      **                            **\n");
+		 printf("      **	                  \n");
+		 printf("      **	                     \n");
+		 printf("      **                        \n");
+		 printf("      **                       \n");
+		 printf("      **\n");
+		 printf("     ****\n");
+	     printf("  **********\n");
+	     printf(" ************\n");
+         printf("**************\n\n");
+     	}
+		else if (in == 7)
+		{
+		 printf("      ********************************\n");
+		 printf("      ********************************\n");
+		 printf("      **		            **\n");
+		 printf("      **                            **\n");
+		 printf("      **		           ****\n");							
+		 printf("      **		         **    **\n");
+		 printf("      **		        **      **\n");
+		 printf("      **		        **      **\n");
+		 printf("      **	                 **    **\n");
+		 printf("      **                           ****\n");
+		 printf("      **			 ********\n");
+		 printf("      **	                **  **  **\n");
+		 printf("      **	               **   **   **\n");
+		 printf("      **	              **    **	  **\n");
+		 printf("      **                            **\n");
+		 printf("      **                            **\n");
+		 printf("      **	                  \n");
+		 printf("      **	                 \n");
+		 printf("      **                        \n");
+		 printf("      **                       \n");
+		 printf("      **\n");
+		 printf("     ****\n");
+	     printf("  **********\n");
+	     printf(" ************\n");
+         printf("**************\n\n");
+     	}
+		else if (in == 8)
+		{
+		 printf("      ********************************\n");
+		 printf("      ********************************\n");
+		 printf("      **		            **\n");
+		 printf("      **                            **\n");
+		 printf("      **		           ****\n");							
+		 printf("      **		         **    **\n");
+		 printf("      **		        **      **\n");
+		 printf("      **		        **      **\n");
+		 printf("      **	                 **    **\n");
+		 printf("      **                           ****\n");
+		 printf("      **			 ********\n");
+		 printf("      **	                **  **  **\n");
+		 printf("      **	               **   **   **\n");
+		 printf("      **	              **    **	  **\n");
+		 printf("      **                            **\n");
+		 printf("      **                            **\n");
+		 printf("      **	                  **  \n");
+		 printf("      **	                 **    \n");
+		 printf("      **                        **      \n");
+		 printf("      **                       **        \n");
+		 printf("      **\n");
+		 printf("     ****\n");
+	     printf("  **********\n");
+	     printf(" ************\n");
+         printf("**************\n\n");
+     	}
+		else if (in == 9)
+		{
+		 printf("      ********************************\n");
+		 printf("      ********************************\n");
+		 printf("      **		            **\n");
+		 printf("      **                            **\n");
+		 printf("      **		           ****\n");							
+		 printf("      **		         **    **\n");
+		 printf("      **		        **      **\n");
+		 printf("      **		        **      **\n");
+		 printf("      **	                 **    **\n");
+		 printf("      **                           ****\n");
+		 printf("      **			 ********\n");
+		 printf("      **	                **  **  **\n");
+		 printf("      **	               **   **   **\n");
+		 printf("      **	              **    **	  **\n");
+		 printf("      **                            **\n");
+		 printf("      **                            **\n");
+		 printf("      **	                  **  **\n");
+		 printf("      **	                 **    **\n");
+		 printf("      **                        **      **\n");
+		 printf("      **                       **        **\n");
+		 printf("      **\n");
+		 printf("     ****\n");
+	     printf("  **********\n");
+	     printf(" ************\n");
+         printf("**************\n\n");
+     	}
+        else if (in == 0)
+        {
+         printf("\n\n");	
+		}
 }
 
 int check(char input[], char word[])/*Excerpt from Python's "Find"*/
