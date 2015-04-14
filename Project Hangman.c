@@ -6,42 +6,59 @@
 /*Best of Luck*/
 void main(void)
 {
-	printf("1.Single Player\n");
-	printf("2.Multiplayer\n");
-	printf("3.Create Mode\n");
-	printf("4.Scores\n");
-	printf("5.Credit\n");
-	printf("6.Quit\n");
+	system("mode 60,45");/*fixed window size*/
+	printf("                                                           \n");
+	printf("        +11O88      1OO       +   8     ++11OO88           \n");
+	printf("      ++          +1   88    + 1O8 8   ++                  \n");
+	printf("      ++   O88   ++     88  ++  O  88  ++11OO88            \n");
+	printf("      ++      8  ++ 1OO 88  ++     88  ++                  \n");
+	printf("        +11O88   ++     88  ++     88   ++11OO88           \n\n");
+	printf("                     +1O88    ++11OO888                    \n");
+	printf("                   ++     88  ++                           \n");
+        printf("                   ++     88  ++11O88                      \n");
+	printf("                   ++     88  ++                           \n");
+	printf("                     +1O88    ++                           \n\n");
+	printf("       ++     88     1O8     ++     88    +11O88           \n");
+	printf("       ++     88   +1   88   ++ 1   88  ++                 \n");
+	printf("       ++11OO888  ++     88  ++  1O 88  ++   O88           \n");
+	printf("       ++     88  ++ 1O8 88  ++    O88  ++      8          \n");
+	printf("       ++     88  ++     88  ++     88    +11O88           \n");
+	printf("\n __________________________________________________________\n\n");
+	printf("                   1. Single Player\n");
+	printf("                   2. Multiplayer\n");
+	printf("                   3. Create Mode\n");
+	printf("                   4. Scores\n");
+	printf("                   5. Credit\n");
+	printf("                   6. Quit\n");
+	
 	char input[2];
-	while(1)
+	printf("\nEnter a number 1-6: ");
+	scanf("%s", input);
+	system("cls");
+	
+	if(input[0]=='1')
 	{
-		/*print mainmenu interface*/
-		printf("Command: ");
-		scanf("%s", input);
-		if(input[0]=='')
-		{
-			single();/*Singleplayer*/
-		}
-		if(input[0]=='')
-		{
-			multi();/*Multiplayer*/
-		}
-		if(input[0]=='')
-		{
-			create();/*Create-a-category*/
-		}
-		if(input[0]=='')
-		{
-			score();/*Print scores*/
-		}
-		if(input[0]=='')
-		{
-			credit();/*Print our awesome names*/
-		}
-		if(input[0]=='')
-		{
-			quit();/*Remove if impossible*/
-		}
+		printf("single");/*Singleplayer*/
+	}
+	if(input[0]=='2')
+	{
+		printf("multi");/*Multiplayer*/
+	}
+	if(input[0]=='3')
+	{
+		printf("create");/*Create-a-category*/
+	}
+	if(input[0]=='4')
+	{
+		printf("score");/*Print scores*/
+	}
+	if(input[0]=='5')
+	{
+		printf("credit");/*Print our awesome names*/
+	}
+	if(input[0]=='6')
+	{
+		printf("quit");/*Remove if impossible*/
 	}
 }
 
