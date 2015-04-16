@@ -986,7 +986,7 @@ int credit()
 
 int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102], int vocto)/*Actually play the singleplayer*/
 {
-	char input[52]="", current[52]="", message[101]="";
+	char input[52]="", current[52]="";
 	char word[52]="", cha[]="abcdefghijklmnopqrstuvwxyz";
 	int rng=1;/*Random Number God*/
 	int i=1,j=0, vocnum=vocto, score=0;
@@ -995,6 +995,7 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 	
 	while(!(strcmp(input,"quit")==0 || vocnum==0))
 	{
+		char message[101]="";
 		int voc_al[vocto+1], cha_al[26]={0} , life=0;
 		for(i=0;i<=vocto;i++)
 			voc_al[i]=0;
@@ -1007,7 +1008,7 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 		voc_al[rng]=1;
 		vocnum--;
 		
-		char mhint[102];
+		char mhint[102]="", ghint[102]="";
 		strcpy(mhint, hint[rng]);
 		
 		clear();
@@ -1033,7 +1034,6 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 		for(i;i>0;i--)
 		{
 			rng = rand() % (strlen(alpha)-1)+1;
-			printf("%c\n", alpha[rng]);
 			for(j=0;j<strlen(current);j++)
 			{
 				if(tolower(word[j])==alpha[rng])
@@ -1043,11 +1043,9 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 			}
 			cha_al[find(cha, tolower(alpha[rng]))]=1;
 		}
-		printf("%s %s\n",current, word);
-		printf("%s\n", alpha);
-		while(!(strcmp(input, "skip")==0 ||check('*', current)==0 || life==9))
+		memset(message, 0, strlen(message));
+		while(!(strcmp(input, "quit")==0 ||check('*', current)==0 || life==9))
 		{
-			memset(message, 0, strlen(message));
 			/*clear();*/
 			printf("+*-Singleplayer.*+\n");
 			printf("Current Category: %s\n", title);
@@ -1059,19 +1057,35 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 			for(i=0;i<26;i++)
 				if(cha_al[i]==1)
 					printf(" %c", cha[i]);
-			printf("\n%s\n",message);
+			printf("\n%s\n", ghint);
+			printf("\n\n%s\n\n",message);
+			if(strlen(mhint))
+				printf("Type \'hint\' to reveal a hint.\nHints uses 5 scores so think it through.\n");
+			printf("Type \'quit\' to return to category selection.\n");
 			printf("\n\nAnswer: ");
 			fgets (input, 52, stdin);
 			input[strcspn(input, "\n")] = 0;
 			for(i=0;i<strlen(input);i++)
 			{
-				if(life==9||strcmp(input, "quit")==0||check('*', current)==0)
+				if(life==9||check('*', current)==0)
 				{
 					break;
 				}
 				if(strcmp(input, "hint")==0)
 				{
-					strcpy(message, mhint);
+					strcpy(ghint, mhint);
+					if(strlen(mhint))
+						score-=5;
+					memset(message, 0, strlen(message));
+					break;
+				}
+				if(strcmp(input, "quit")==0)
+				{
+					printf("Are you sure you want to abandon this session and return to selection?(yes/any): ");
+					fgets (input, 52, stdin);
+					input[strcspn(input, "\n")] = 0;
+					if(strcmp(input, "yes"))
+						return 1337;
 					break;
 				}
 				if((tolower(input[i])<97 || tolower(input[i])>122))
@@ -1079,6 +1093,7 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 				}
 				else if(cha_al[find(cha, input[i])]==1)
 				{
+					memset(message, 0, strlen(message));
 					strcpy(message, "You have already used ");
 					strcat(message, "\'");
 					message[strlen(message)]=input[i];
@@ -1095,19 +1110,29 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 								current[j]=word[j];
 						cha_al[find(cha, input[i])]=1;
 						score+=5;
+						memset(message, 0, strlen(message));
 					}
 					else
 					{
 						life++;
 						man(life);
+						cha_al[find(cha, input[i])]=1;
+						memset(message, 0, strlen(message));
 					}
 				}
 				clear();
 			}
+			clear();
 		}
 		memset(input, 0, strlen(input));
 		if(life==9 || vocnum==0){
 			printf("\nGame Over.\n");
+			man(life);
+			if(life==9)
+			{
+				printf("Too bad. You were struggling with the word \n\n\" %s \"\n\n", word);
+				printf("It's OK... better luck next time.\n");
+			}
 			if(vocnum==0)
 				printf("Congratulations! You have beaten this entire category.\n");
 			printf("Your score is: %d\n", score);
@@ -1115,8 +1140,8 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 			printf("Type \'n\' to Proceed to highscore.\n");
 			printf("Type \'q\' to quit to category selection.\n");
 			while(1){
-			fgets (input, 52, stdin);
-			input[strcspn(input, "\n")] = 0;
+				fgets (input, 52, stdin);
+				input[strcspn(input, "\n")] = 0;
 				if(strcmp(input,"r")==0)
 				{
 					vocnum=vocto;
