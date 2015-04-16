@@ -6,8 +6,6 @@
 /*Best of Luck*/
 int main()
 {
-	system("mode 100,45");/*fixed window size*/
-	
 	while(1){
 	printf("                                                           \n");
 	printf("        +11O88      1OO       +   8     ++11OO88           \n");
@@ -155,8 +153,7 @@ int single()
 		else
 		{
 			clear();
-			printf("Error - Unrecognised Files.");
-			return 0;
+			printf("Unrecognised file or the file does not exist.");
 		}
 	}
 	fclose(txt);/*END OF LOAD*/
@@ -991,14 +988,15 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 	int rng=1;/*Random Number God*/
 	int i=1,j=0, vocnum=vocto, score=0;
 	time_t t;
+	int voc_al[vocto+1];
+	for(i=0;i<=vocto;i++)
+		voc_al[i]=0;
 	srand((unsigned) time(&t));
 	
 	while(!(strcmp(input,"quit")==0 || vocnum==0))
 	{
 		char message[101]="";
-		int voc_al[vocto+1], cha_al[26]={0} , life=0;
-		for(i=0;i<=vocto;i++)
-			voc_al[i]=0;
+		int cha_al[26]={0} , life=0;
 		char alpha[27]=" ";
 		
 		do{
@@ -1050,6 +1048,7 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 			printf("+*-Singleplayer.*+\n");
 			printf("Current Category: %s\n", title);
 			printf("%s\n\n", desc);
+			printf("Vocabulary number: %d / %d\n", vocto-vocnum, vocto);
 			printf("Your current score is: %d\n",score);
 			man(life);
 			printboxes(current, '*');
@@ -1084,12 +1083,14 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 					printf("Are you sure you want to abandon this session and return to selection?(yes/any): ");
 					fgets (input, 52, stdin);
 					input[strcspn(input, "\n")] = 0;
-					if(strcmp(input, "yes"))
+					if(strcmp(input, "yes")==0)
 						return 1337;
 					break;
 				}
 				if((tolower(input[i])<97 || tolower(input[i])>122))
 				{
+					memset(message, 0, strlen(message));
+					strcpy(message, "That is not an English alphabet.");
 				}
 				else if(cha_al[find(cha, input[i])]==1)
 				{
@@ -1145,6 +1146,8 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 				if(strcmp(input,"r")==0)
 				{
 					vocnum=vocto;
+					for(i=0;i<=vocto;i++)
+						voc_al[i]=0;
 					break;
 				}
 				if(strcmp(input,"n")==0)
