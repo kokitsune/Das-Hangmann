@@ -6,6 +6,7 @@
 /*Best of Luck*/
 int main()
 {
+	system("mode 60,45");
 	while(1){
 	printf("                                                           \n");
 	printf("        +11O88      1OO       +   8     ++11OO88           \n");
