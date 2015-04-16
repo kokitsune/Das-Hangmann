@@ -16,7 +16,7 @@ int main()
 	printf("        +11O88   ++     88  ++     88   ++11OO88           \n\n");
 	printf("                     +1O88    ++11OO888                    \n");
 	printf("                   ++     88  ++                           \n");
-    printf("                   ++     88  ++11O88                      \n");
+    	printf("                   ++     88  ++11O88                      \n");
 	printf("                   ++     88  ++                           \n");
 	printf("                     +1O88    ++                           \n\n");
 	printf("       ++     88     1O8     ++     88    +11O88           \n");
@@ -199,7 +199,7 @@ int multi()
 	printf("\n");
 	
 	
-	printf("\nPlease enter a number of round: ");
+	printf("\nPlease enter a number of round (press 0 to exit).: ");
 	fgets(round, 99, stdin);
 	
 	rounds = atoi(round);
@@ -986,9 +986,19 @@ int write_score(char name[], int point)
 	FILE *txt;
 }
 
+
 int credit()
 {
-	/*Just print massively*/
+	printf("***********************************************************\n\n");
+	printf("                This game was created by.\n\n");
+	printf("      Panon Songsawatkul           student id: 57070070\n");
+	printf("      Piyanat Phengchai            student id: 57070071\n");
+	printf("      Wilailuck Chitrattanapaphon  student id: 57070108\n");
+	printf("      Saris Sitthichobthum         student id: 57070128\n");
+	printf("      Apisit Boonrat               student id: 57070144\n\n");
+	printf("  from King Mongkut's Institute of Technology Ladkrabang.\n\n");
+	printf("Copyright 2015\n\n");
+	printf("***********************************************************\n\n");
 	getch();
 	return 31337;
 }
