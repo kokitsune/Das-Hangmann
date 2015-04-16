@@ -16,7 +16,7 @@ int main()
 	printf("        +11O88   ++     88  ++     88   ++11OO88           \n\n");
 	printf("                     +1O88    ++11OO888                    \n");
 	printf("                   ++     88  ++                           \n");
-    	printf("                   ++     88  ++11O88                      \n");
+    printf("                   ++     88  ++11O88                      \n");
 	printf("                   ++     88  ++                           \n");
 	printf("                     +1O88    ++                           \n\n");
 	printf("       ++     88     1O8     ++     88    +11O88           \n");
@@ -42,16 +42,19 @@ int main()
 		if(input[0]=='1')
 		{
 			clear();
+			system("mode 120,100");
 			single();/*Singleplayer*/
 		}
 		if(input[0]=='2')
 		{
 			clear();
+			system("mode 120,100");
 			multi();/*Multiplayer*/
 		}
 		if(input[0]=='3')
 		{
 			clear();
+			system("mode 120,200");
 			create();/*Create-a-category*/
 		}
 		if(input[0]=='4')
@@ -83,6 +86,7 @@ int single()
 	char hint[11][51][102]={""};
 	char title[11][52]={""};
 	char desc[11][102]={""};
+	char filename[102]="";
 	
 	
 	printf("*-Singleplayer Mode-*\n\n");
@@ -158,6 +162,7 @@ int single()
 		}
 	}
 	fclose(txt);/*END OF LOAD*/
+	strcpy(filename,input);
 	while(1)
 	{
 		clear();
@@ -182,7 +187,7 @@ int single()
 		}
 		else
 		{
-			play(title[atoi(input)], vocab[atoi(input)], hint[atoi(input)], desc[atoi(input)], vocto[atoi(input)]);
+			play(title[atoi(input)], vocab[atoi(input)], hint[atoi(input)], desc[atoi(input)], vocto[atoi(input)], filename);
 		}
 	}
 	
@@ -199,7 +204,7 @@ int multi()
 	printf("\n");
 	
 	
-	printf("\nPlease enter a number of round (press 0 to exit).: ");
+	printf("\nPlease enter a number of round: ");
 	fgets(round, 99, stdin);
 	
 	rounds = atoi(round);
@@ -975,17 +980,235 @@ int edit(int mode, char massive[], char filename[])/*Load and edit things*/ /*Fo
 
 int score()/*Secondary Objective*/
 {
-	/*Score for each category using sort algorithm (qsort should be easiest)*/
-	char score[5][52];/*Show only first fifty highest score*/
+	char cate[6][52]={"","Science and Mathematics","Country","Food","Computer","Animal"};
+	char guys[6][52][152];
+	char score[6][52][10];
+	char massive[8000], clock[52]="";
+	char current[102]="";
+	int sc=1,sg=1, i=0,j=0;
 	FILE *txt;
+	time_t t;
+    time(&t);
+	printf("Current date and time : %s",ctime(&t));
+	txt = fopen("Scoreboard.txt", "r");
+	fgets(massive, 8000, (FILE*)txt);
+	fclose(txt);
+	if(massive[0]=='*')
+	{
+		while(!(massive[i]=='+'&&massive[i+1]=='+'))
+		{
+			while(massive[i]!='+')
+			{
+				if(massive[i-1]=='+')i--;
+				for(i++;!((i>=strlen(massive)) || (massive[i]=='*')); i++)
+				{
+					current[strlen(current)]=massive[i];
+				}
+				current[101]='\0';
+				
+				strcpy(guys[sc][sg], current);
+				memset(current,0,strlen(current));
+				for(i++;!((i>=strlen(massive)) || (massive[i]=='*') || (massive[i]=='+')); i++)
+				{
+					current[strlen(current)]=massive[i];
+				}
+				current[101]='\0';
+				strcpy(score[sc][sg], current);
+				memset(current,0,strlen(current));
+				sg++;
+			}
+			if(!(massive[i]=='+'&&massive[i+1]=='+'))i++;
+			sg=1;
+			sc++;
+		}
+	}
+	else
+	{
+		txt = fopen("Scoreboard.txt", "w");
+		fputs("**+*+*+*+*++", txt);
+		fclose(txt);
+	}
+	memset(current, 0, strlen(current));
+	while(strcmp(current, "back")!=0)
+	{
+		clear();
+		printf("Select an official category to view scores.\n");
+		printf("type \'back\' to return to Mainmenu.\n");
+		for(i=1;i<=5;i++)
+		{
+			printf("%d: %s\n",i,cate[i]);
+		}
+		printf("\nResponse: ");
+		fgets (current, 51, stdin);
+		current[strcspn(current, "\n")] = 0;
+		if(current[0]=='1')
+		{
+			printf("Category: %s\n\n", cate[1]);
+			for(i=50;i>=1;i--)
+			{
+				if(strlen(guys[1][i]))
+				{
+					printf("    %s\t---\t%s\n",guys[1][i],score[1][i]);
+				}
+			}
+			printf("\nPress any key to continue.");
+			getchar();
+		}
+		if(current[0]=='2')
+		{
+			printf("Category: %s\n\n", cate[2]);
+			for(i=50;i>=1;i--)
+			{
+				if(strlen(guys[2][i]))
+				{
+					printf("    %s\t---\t%s\n",guys[2][i],score[2][i]);
+				}
+			}
+			printf("\nPress any key to continue.");
+			getchar();
+		}
+		if(current[0]=='3')
+		{
+			printf("Category: %s\n\n", cate[3]);
+			for(i=50;i>=1;i--)
+			{
+				if(strlen(guys[3][i]))
+				{
+					printf("    %s\t---\t%s\n",guys[3][i],score[3][i]);
+				}
+			}
+			printf("\nPress any key to continue.");
+			getchar();
+		}
+		if(current[0]=='4')
+		{
+			printf("Category: %s\n\n", cate[4]);
+			for(i=50;i>=1;i--)
+			{
+				if(strlen(guys[4][i]))
+				{
+					printf("    %s\t---\t%s\n",guys[4][i],score[4][i]);
+				}
+			}
+			printf("\nPress any key to continue.");
+			getchar();
+		}
+		if(current[0]=='5')
+		{
+			printf("Category: %s\n\n", cate[5]);
+			for(i=50;i>=1;i--)
+			{
+				if(strlen(guys[5][i]))
+				{
+					printf("    %s\t---\t%s\n",guys[5][i],score[5][i]);
+				}
+			}
+			printf("\nPress any key to continue.");
+			getchar();
+		}
+	}
+	return 0;
 }
 
-int write_score(char name[], int point)
+
+int write_score(char title[],char name[], int point)
 {
-	char score[6][52];
+	char cate[6][52]={"","Science and Mathematics","Country","Food","Computer","Animal"};
+	char guys[6][52][152]={""};
+	char score[6][52][10]={""};
+	char massive[8000]="", clock[52]="";
+	int sc=1,sg=1, i=0,j=0, people[6]={0};
 	FILE *txt;
+	time_t t;
+    time(&t);
+	printf("Current date and time : %s",ctime(&t));
+	txt = fopen("Scoreboard.txt", "r");
+	fgets(massive, 8000, (FILE*)txt);
+	fclose(txt);
+	if(massive[0]=='*')
+	{
+		char current[102]="";
+		while(!(massive[i]=='+'&&massive[i+1]=='+'))
+		{
+			while(massive[i]!='+')
+			{
+				if(massive[i-1]=='+')i--;
+				for(i++;!((i>=strlen(massive)) || (massive[i]=='*')); i++)
+				{
+					current[strlen(current)]=massive[i];
+				}
+				current[101]='\0';
+				
+				strcpy(guys[sc][sg], current);
+				memset(current,0,strlen(current));
+				for(i++;!((i>=strlen(massive)) || (massive[i]=='*') || (massive[i]=='+')); i++)
+				{
+					current[strlen(current)]=massive[i];
+				}
+				current[101]='\0';
+				strcpy(score[sc][sg], current);
+				memset(current,0,strlen(current));
+				people[sc]++;
+				sg++;
+			}
+			if(!(massive[i]=='+'&&massive[i+1]=='+'))i++;
+			sg=1;
+			sc++;
+		}
+	}
+	else
+	{
+		txt = fopen("Scoreboard.txt", "w");
+		fputs("**+*+*+*+*++", txt);
+		fclose(txt);
+	}
+	if(strlen(name)==0)
+		strcpy(name,"I have no name");
+	strcpy(clock,ctime(&t));
+	clock[strcspn(clock, "\n")] = 0;
+	strcat(clock, " - ");
+	strcat(clock, name);
+	for(i=1;i<=5;i++)
+		if(strcmp(cate[i], title)==0)
+		{
+			for(j=1;j<=51;j++)
+				if(strlen(guys[i][j])==0)
+				{
+					strcpy(guys[i][j], clock);
+					sprintf(score[i][j], "%d", point);
+					people[i]++;
+					break;
+				}
+			break;
+		}
+	printf("%s %s %d %s %s", title, name, point, guys[i][j], score[i][j]);
+	getch();
+	fopen("Scoreboard.txt", "w");
+	fputs("*" , txt);
+	for(i=1;i<=5;i++)
+	{
+		if(strlen(guys[i][51]))
+		{
+			j=2;
+		}
+		else
+		{
+			j=1;
+		}
+		for(j;j<=people[i];j++)
+		{	
+			fputs(guys[i][j], txt);
+			fputs("*", txt);
+			fputs(score[i][j], txt);
+			if(j!=people[i])fputs("*" , txt);
+		}
+		if(people[i]==0)
+		fputs("*" , txt);
+		fputs("+", txt);
+	}
+	fputs("+",txt);
+	fclose(txt);
 }
-
 
 int credit()
 {
@@ -999,11 +1222,11 @@ int credit()
 	printf("  from King Mongkut's Institute of Technology Ladkrabang.\n\n");
 	printf("Copyright 2015\n\n");
 	printf("***********************************************************\n\n");
-	getch();
+	getchar();
 	return 31337;
 }
 
-int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102], int vocto)/*Actually play the singleplayer*/
+int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102], int vocto, char filename[])/*Actually play the singleplayer*/
 {
 	char input[52]="", current[52]="";
 	char word[52]="", cha[]="abcdefghijklmnopqrstuvwxyz";
@@ -1032,7 +1255,6 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 		strcpy(mhint, hint[rng]);
 		
 		clear();
-		/*strcpy(word,"MammmMaaammmMgjfkogjlmMAGJFKOGL");*/
 		for(i=0;i<strlen(word);i++)
 		{
 			if(find(cha, tolower(word[i]))!=-1){
@@ -1066,7 +1288,7 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 		memset(message, 0, strlen(message));
 		while(!(strcmp(input, "quit")==0 ||check('*', current)==0 || life==9))
 		{
-			/*clear();*/
+			clear();
 			printf("+*-Singleplayer.*+\n");
 			printf("Current Category: %s\n", title);
 			printf("%s\n\n", desc);
@@ -1160,6 +1382,7 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 				printf("Congratulations! You have beaten this entire category.\n");
 			printf("Your score is: %d\n", score);
 			printf("Type \'r\' to replay.\n");
+			if(strcmp(filename,"Official.txt")==0)
 			printf("Type \'n\' to Proceed to highscore.\n");
 			printf("Type \'q\' to quit to category selection.\n");
 			while(1){
@@ -1172,12 +1395,14 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 						voc_al[i]=0;
 					break;
 				}
-				if(strcmp(input,"n")==0)
+				if(strcmp(input,"n")==0 && strcmp(filename,"Official.txt")==0)
 				{
-					printf("Insert your name: ");
+					printf("Insert your name(Forbid \'+\',\'*\'): ");
+					do{
 					fgets (input, 52, stdin);
 					input[strcspn(input, "\n")] = 0;
-					write_score(input, score);
+					}while(in(input,"*+"));
+					write_score(title, input, score);
 					return 0;
 				}
 				if(strcmp(input,"q")==0)
@@ -1192,7 +1417,6 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 
 int clear()
 {
-	/*printf("DING DONG\n");*/
 	system("cls");
 }
 
