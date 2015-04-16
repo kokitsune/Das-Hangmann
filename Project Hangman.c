@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
+#include <time.h>
 /*All function except stated otherwise should be treated as primary objective*/
 /*Best of Luck*/
 int main()
 {
-	system("mode 60,45");/*fixed window size*/
+	system("mode 100,45");/*fixed window size*/
 	
 	while(1){
 	printf("                                                           \n");
@@ -17,7 +17,7 @@ int main()
 	printf("        +11O88   ++     88  ++     88   ++11OO88           \n\n");
 	printf("                     +1O88    ++11OO888                    \n");
 	printf("                   ++     88  ++                           \n");
-        printf("                   ++     88  ++11O88                      \n");
+    printf("                   ++     88  ++11O88                      \n");
 	printf("                   ++     88  ++                           \n");
 	printf("                     +1O88    ++                           \n\n");
 	printf("       ++     88     1O8     ++     88    +11O88           \n");
@@ -42,18 +42,22 @@ int main()
 
 		if(input[0]=='1')
 		{
+			clear();
 			single();/*Singleplayer*/
 		}
 		if(input[0]=='2')
 		{
+			clear();
 			multi();/*Multiplayer*/
 		}
 		if(input[0]=='3')
 		{
+			clear();
 			create();/*Create-a-category*/
 		}
 		if(input[0]=='4')
 		{
+			clear();
 			score();/*Print scores*/
 		}
 		if(input[0]=='5')
@@ -91,7 +95,7 @@ int single()
 		printf("\nPlease type down filename below to load custom category.\n");
 		printf("If left blank, it will load original category for you.\n");
 		printf("Type \'q\' to go back to mainmenu.\n");
-		printf("Enter filename: ");
+		printf("\nEnter filename: ");
 		fgets (input, 51, stdin);
 		input[strcspn(input, "\n")] = 0;
 		
@@ -158,13 +162,13 @@ int single()
 	fclose(txt);/*END OF LOAD*/
 	while(1)
 	{
+		clear();
 		for(i=1;i<=tto;i++)
 		{
 			printf("%d: %s\n", i, title[i]);
 			printf("%s\n", desc[i]);
 		}
-		printf("Choose a category(#/q to quit): ");
-		printf("Input: ");
+		printf("\nChoose a category(#/q to quit): ");
 		fgets (input, 51, stdin);
 		input[strcspn(input, "\n")] = 0;
 		
@@ -967,6 +971,12 @@ int score()/*Secondary Objective*/
 	FILE *txt;
 }
 
+int write_score(char name[], int point)
+{
+	char score[6][52];
+	FILE *txt;
+}
+
 int credit()
 {
 	/*Just print massively*/
@@ -976,54 +986,156 @@ int credit()
 
 int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102], int vocto)/*Actually play the singleplayer*/
 {
-	char input[52]="", current[52]="";
+	char input[52]="", current[52]="", message[101]="";
 	char word[52]="", cha[]="abcdefghijklmnopqrstuvwxyz";
 	int rng=1;/*Random Number God*/
-	int i=1,life, cha_al[26]={0};
+	int i=1,j=0, vocnum=vocto, score=0;
 	time_t t;
 	srand((unsigned) time(&t));
 	
-	while(strcmp(input,"quit")!=0)
+	while(!(strcmp(input,"quit")==0 || vocnum==0))
 	{
-		int voc_al[vocto+1];
+		int voc_al[vocto+1], cha_al[26]={0} , life=0;
 		for(i=0;i<=vocto;i++)
 			voc_al[i]=0;
-		char inside[27]=" ";
+		char alpha[27]=" ";
+		
 		do{
 		rng = rand() % vocto +1;
 		}while(voc_al[rng]==1);
 		strcpy(word, vocab[rng]);
 		voc_al[rng]=1;
+		vocnum--;
+		
+		char mhint[102];
+		strcpy(mhint, hint[rng]);
 		
 		clear();
+		/*strcpy(word,"MammmMaaammmMgjfkogjlmMAGJFKOGL");*/
 		for(i=0;i<strlen(word);i++)
 		{
-			if(find(cha, tolower(word[i]))!=-1)
-				current[i]="*";
+			if(find(cha, tolower(word[i]))!=-1){
+				current[i]='*';
+				if(check(tolower(word[i]), alpha)==0)
+					alpha[strlen(alpha)]=tolower(word[i]);
+			}
 			else
 				current[i]=word[i];
 		}
 		current[i]='\0';
-		printf("%s\n",current);
-		while(strcmp(input, "back")!=0)
+		i=1;
+		if(strlen(alpha)<2)
+			i--;
+		if(strlen(alpha)>6)
+			i++;
+		if(strlen(alpha)>12)
+			i++;
+		for(i;i>0;i--)
 		{
-			clear();
+			rng = rand() % (strlen(alpha)-1)+1;
+			printf("%c\n", alpha[rng]);
+			for(j=0;j<strlen(current);j++)
+			{
+				if(tolower(word[j])==alpha[rng])
+				{
+					current[j]=word[j];
+				}
+			}
+			cha_al[find(cha, tolower(alpha[rng]))]=1;
+		}
+		printf("%s %s\n",current, word);
+		printf("%s\n", alpha);
+		while(!(strcmp(input, "skip")==0 ||check('*', current)==0 || life==9))
+		{
+			memset(message, 0, strlen(message));
+			/*clear();*/
 			printf("+*-Singleplayer.*+\n");
 			printf("Current Category: %s\n", title);
 			printf("%s\n\n", desc);
+			printf("Your current score is: %d\n",score);
 			man(life);
-			printf("Answer: ");
+			printboxes(current, '*');
+			printf("Characters already used: ");
+			for(i=0;i<26;i++)
+				if(cha_al[i]==1)
+					printf(" %c", cha[i]);
+			printf("\n%s\n",message);
+			printf("\n\nAnswer: ");
 			fgets (input, 52, stdin);
 			input[strcspn(input, "\n")] = 0;
 			for(i=0;i<strlen(input);i++)
 			{
-				if(life==9)
+				if(life==9||strcmp(input, "quit")==0||check('*', current)==0)
 				{
 					break;
 				}
+				if(strcmp(input, "hint")==0)
+				{
+					strcpy(message, mhint);
+					break;
+				}
+				if((tolower(input[i])<97 || tolower(input[i])>122))
+				{
+				}
+				else if(cha_al[find(cha, input[i])]==1)
+				{
+					strcpy(message, "You have already used ");
+					strcat(message, "\'");
+					message[strlen(message)]=input[i];
+					message[strlen(message)]='\'';
+					message[strlen(message)]='.';
+					message[strlen(message)]='\0';
+				}
+				else
+				{
+					if(check(tolower(input[i]), word))
+					{
+						for(j=0;j<strlen(word);j++)
+							if(input[i]==tolower(word[j]))
+								current[j]=word[j];
+						cha_al[find(cha, input[i])]=1;
+						score+=5;
+					}
+					else
+					{
+						life++;
+						man(life);
+					}
+				}
+				clear();
 			}
 		}
-		
+		memset(input, 0, strlen(input));
+		if(life==9 || vocnum==0){
+			printf("\nGame Over.\n");
+			if(vocnum==0)
+				printf("Congratulations! You have beaten this entire category.\n");
+			printf("Your score is: %d\n", score);
+			printf("Type \'r\' to replay.\n");
+			printf("Type \'n\' to Proceed to highscore.\n");
+			printf("Type \'q\' to quit to category selection.\n");
+			while(1){
+			fgets (input, 52, stdin);
+			input[strcspn(input, "\n")] = 0;
+				if(strcmp(input,"r")==0)
+				{
+					vocnum=vocto;
+					break;
+				}
+				if(strcmp(input,"n")==0)
+				{
+					printf("Insert your name: ");
+					fgets (input, 52, stdin);
+					input[strcspn(input, "\n")] = 0;
+					write_score(input, score);
+					return 0;
+				}
+				if(strcmp(input,"q")==0)
+				{
+					return 0;
+				}
+			}
+		}
 	}
 	
 }
@@ -1295,13 +1407,13 @@ int man(int in)
 		}
 }
 
-int check(int input, char word[])/*Excerpt from Python's "Find"*/
+int check(int input, char word[])/*Excerpt from Python's "in"*/
 {
 	int i=0;
 	
 	for(i;i<strlen(word);i++)
 	{
-		if(input == word[i])
+		if(input == tolower(word[i]))
 		{
 			return 1;
 		}
@@ -1350,4 +1462,25 @@ int find(char string[], int cha)/*If cha in string, return index - Excerpt from 
 		}
 	}
 	return -1;
+}
+
+int printboxes(char current[], int box)
+{
+	int i;
+	for(i=0;i<strlen(current);i++)
+	{
+		if(current[i]==box)
+			printf(" _ ");
+		else
+			printf("   ");
+	}
+	printf("\n");
+	for(i=0;i<strlen(current);i++)
+	{
+		if(current[i]==box)
+			printf("|_|");
+		else
+			printf(" %c ", current[i]);
+	}
+	printf("\n");
 }
