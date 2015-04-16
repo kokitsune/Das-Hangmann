@@ -4,9 +4,11 @@
 #include <string.h>
 /*All function except stated otherwise should be treated as primary objective*/
 /*Best of Luck*/
-void main(void)
+int main()
 {
 	system("mode 60,45");/*fixed window size*/
+	
+	while(1){
 	printf("                                                           \n");
 	printf("        +11O88      1OO       +   8     ++11OO88           \n");
 	printf("      ++          +1   88    + 1O8 8   ++                  \n");
@@ -35,31 +37,35 @@ void main(void)
 	printf("\nEnter a number 1-6: ");
 	fgets (input, 51, stdin);
 	input[strcspn(input, "\n")] = 0;
-	system("cls");
 	
-	if(input[0]=='1')
-	{
-		printf("single");/*Singleplayer*/
-	}
-	if(input[0]=='2')
-	{
-		printf("multi");/*Multiplayer*/
-	}
-	if(input[0]=='3')
-	{
-		printf("create");/*Create-a-category*/
-	}
-	if(input[0]=='4')
-	{
-		printf("score");/*Print scores*/
-	}
-	if(input[0]=='5')
-	{
-		printf("credit");/*Print our awesome names*/
-	}
-	if(input[0]=='6')
-	{
-		printf("quit");/*Remove if impossible*/
+	
+
+		if(input[0]=='1')
+		{
+			single();/*Singleplayer*/
+		}
+		if(input[0]=='2')
+		{
+			multi();/*Multiplayer*/
+		}
+		if(input[0]=='3')
+		{
+			create();/*Create-a-category*/
+		}
+		if(input[0]=='4')
+		{
+			score();/*Print scores*/
+		}
+		if(input[0]=='5')
+		{
+			credit();/*Print our awesome names*/
+		}
+		if(input[0]=='6')
+		{
+			clear();
+			return 31337;
+		}
+		clear();
 	}
 }
 
@@ -67,8 +73,7 @@ int single()
 {
 	FILE *txt;
 	char massive[76500]="";
-	char input[52];
-	unsigned int category=0, show_desc=1, ready=0;
+	char input[52]="";
 	unsigned int i=0;
 	unsigned int tnum=1, vocnum=1, tto=0, vocto[11]={0};
 	char vocab[11][51][52]={""};
@@ -97,7 +102,10 @@ int single()
 		}
 		if(strlen(input)==0)
 			strcpy(input, "Official");
-		txt = fopen(strcat(input,".txt"), "r");
+		strcat(input, ".txt");
+		txt = fopen(input, "r");
+		
+		fgets(massive, 76500, (FILE*)txt);
 		if(massive[0]=='+')
 		{
 			char current[102]="";
@@ -138,49 +146,44 @@ int single()
 				vocnum=1;
 				tto++;
 				tnum++;
-			}
+			}break;
 		}
 		else
 		{
+			clear();
 			printf("Error - Unrecognised Files.");
 			return 0;
 		}
 	}
+	fclose(txt);/*END OF LOAD*/
 	while(1)
 	{
-		/*Don't forget to print the interface*/
+		for(i=1;i<=tto;i++)
+		{
+			printf("%d: %s\n", i, title[i]);
+			printf("%s\n", desc[i]);
+		}
+		printf("Choose a category(#/q to quit): ");
 		printf("Input: ");
 		fgets (input, 51, stdin);
 		input[strcspn(input, "\n")] = 0;
-		if(input[0]=='')
+		
+		if(input[0]=='q')
 		{
-			category=random();/*Random category*//*Leap of faith:random*/
-		}
-		if(input[0]=='')
-		{
-			show_desc-=1;
-		}
-		if(input[0]=='')
-		{
-			;/*print title and desc of all category*/
-			/*print error if not possible*/
-		}
-		if(input[0]=='')
-		{
-			printf("Input Category: ");
-			scanf("%d", category);
-			/*print error if not possible*/
-		}
-		if(input[0]=='')
-		{
-			
-			/*print error if not possible*/
-		}
-		if(input[0]=='')
-		{
+			clear();
 			return 0;/*Back*/
 		}
+		if(atoi(input)> tto || atoi(input)<1)
+		{
+			clear();
+			printf("That category does not exist.\n");
+		}
+		else
+		{
+			play(title[atoi(input)], vocab[atoi(input)], hint[atoi(input)], desc[atoi(input)], vocto[atoi(input)]);
+		}
 	}
+	
 }
 
 int multi()
@@ -419,8 +422,7 @@ int create()
 			return 0;
 		}
 	}
-	
-
+}
 
 int edit(int mode, char massive[], char filename[])/*Load and edit things*/ /*Forbid * , + */
 {
@@ -957,7 +959,6 @@ int edit(int mode, char massive[], char filename[])/*Load and edit things*/ /*Fo
 		}
 	}
 }
-}
 
 int score()/*Secondary Objective*/
 {
@@ -969,41 +970,67 @@ int score()/*Secondary Objective*/
 int credit()
 {
 	/*Just print massively*/
+	getch();
+	return 31337;
 }
 
-int play(unsigned int mode, unsigned int category, char vocab[][][], char hint[][][], char desc[][])
+int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102], int vocto)/*Actually play the singleplayer*/
 {
+	char input[52]="", current[52]="";
+	char word[52]="", cha[]="abcdefghijklmnopqrstuvwxyz";
+	int rng=1;/*Random Number God*/
+	int i=1,life, cha_al[26]={0};
+	time_t t;
+	srand((unsigned) time(&t));
+	
+	while(strcmp(input,"quit")!=0)
+	{
+		int voc_al[vocto+1];
+		for(i=0;i<=vocto;i++)
+			voc_al[i]=0;
+		char inside[27]=" ";
+		do{
+		rng = rand() % vocto +1;
+		}while(voc_al[rng]==1);
+		strcpy(word, vocab[rng]);
+		voc_al[rng]=1;
+		
+		clear();
+		for(i=0;i<strlen(word);i++)
+		{
+			if(find(cha, tolower(word[i]))!=-1)
+				current[i]="*";
+			else
+				current[i]=word[i];
+		}
+		current[i]='\0';
+		printf("%s\n",current);
+		while(strcmp(input, "back")!=0)
+		{
+			clear();
+			printf("+*-Singleplayer.*+\n");
+			printf("Current Category: %s\n", title);
+			printf("%s\n\n", desc);
+			man(life);
+			printf("Answer: ");
+			fgets (input, 52, stdin);
+			input[strcspn(input, "\n")] = 0;
+			for(i=0;i<strlen(input);i++)
+			{
+				if(life==9)
+				{
+					break;
+				}
+			}
+		}
+		
+	}
 	
 }
 
-int count_alpha(char word[])/*Return number of alphabet in string word*/
+int clear()
 {
-	int i=0,count=0;
-	for(i;i<strlen(word);i++)
-	{
-		if((word[i]>96 && word[i]<123) || (word[i]>=65 && word[i]<=90))
-		{
-			count++;
-		}
-	}		
-	return count;
-}
-
-int find(char string[], int cha)/*If cha in string, return index*/ /*Excerpt from Python's find*/
-{
-	int i=0;
-	for(i=0;i<strlen(string); i++)
-	{
-		if(string[i]==cha)
-		{
-			return i;
-		}
-	}
-	return -1;
-}
-
-void clear(void)/*clear screen. please measure screen first.*/
-{
+	/*printf("DING DONG\n");*/
 	system("cls");
 }
 
@@ -1268,7 +1295,7 @@ int man(int in)
 		}
 }
 
-int check(char input[], char word[])/*Excerpt from Python's "Find"*/
+int check(int input, char word[])/*Excerpt from Python's "Find"*/
 {
 	int i=0;
 	
@@ -1312,7 +1339,7 @@ int count_alpha(char word[])/*Return number of alphabet in string word*/
 	return count;
 }
 
-int find(char string[], int cha)/*If cha in string, return index*/ /*Excerpt from Python's find*/
+int find(char string[], int cha)/*If cha in string, return index - Excerpt from Python's find*/
 {
 	int i=0;
 	for(i=0;i<strlen(string); i++)
