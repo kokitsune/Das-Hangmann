@@ -189,22 +189,28 @@ int single()
 
 int multi()
 {
-	int score=45,life=0,all=0,j=0,k=0,stat=1;
-	char word[51],alpha[26]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'},state[51];
+	int score=45,life=0,all=0,stat=1,play=1,rounds=0;
+	char word[51],alpha[26]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'},state[51],round[99];
 	
 	printf("Welcome to Two-player Mode\n");
 	printf("Here one player will type a word.\n");
 	printf("And the other will guess what it is.\n");
 	printf("\n");
 	
-	while(life<9){
-		
+	
+	printf("\nPlease enter a number of round: ");
+	fgets(round, 99, stdin);
+	
+	rounds = atoi(round);
+	
+	while(life<8 && play<=rounds){
+	
 		printf("Please insert your word: ");
-		fgets (word, 51, stdin);
+		fgets (word, 51, stdin);	
 		word[strcspn(word, "\n")] = 0;
 		clear();
+				
 			
-		
 		char now[strlen(word)+1];
 		int i=0,check=0,pop=0;
 		int myalpha[26]={0}, length;
@@ -226,7 +232,7 @@ int multi()
 			do
 			{
 				i=0;
-							
+								
 				for(i;i<strlen(word);i++)
 				{
 					if(tolower(input[0]) == tolower(word[i]))
@@ -244,9 +250,11 @@ int multi()
 					clear();
 				}
 				pop=0;
-				printf("%s",man(life));
+				printf("round: %d",play);
+				printf("\n\n");
+				man(life);
 				printf("\nCurrently the question is..\n");
-					
+						
 				i=0;
 				if(!(life >=9 ))
 				{
@@ -266,7 +274,7 @@ int multi()
 						}				
 					}
 					printf("\n");
-							
+								
 					for(i=0;i<strlen(word);i++)
 					{
 						if(now[i]== '_')
@@ -291,7 +299,7 @@ int multi()
 						printf(" %c ",word[i]);
 					}
 				}
-				
+					
 				printf("\n");
 				printf("\n");
 				strcpy(input,"");
@@ -321,14 +329,17 @@ int multi()
 					}
 				}
 			}while (!(check>=length || life >=9  ));
-				if(stat)
-				{
-					all+=score-(life*5);
-					printf("Score %d\n\n",all);
-				}
-				life=0;
+			if(stat)
+			{
+				all+=score-(life*5);
+				printf("Score %d\n\n",all);
+			}
+			life=0;
+			play++;
 		}
 	}
+	printf("Press any keys to return to main menu.");
+	getch();
 }
 
 int create()
