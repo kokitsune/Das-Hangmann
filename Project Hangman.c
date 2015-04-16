@@ -6,7 +6,7 @@
 /*Best of Luck*/
 int main()
 {
-	system("mode 60,45");
+	system("mode 60,85");
 	while(1){
 	printf("                                                           \n");
 	printf("        +11O88      1OO       +   8     ++11OO88           \n");
@@ -980,9 +980,9 @@ int edit(int mode, char massive[], char filename[])/*Load and edit things*/ /*Fo
 
 int score()/*Secondary Objective*/
 {
-	char cate[6][52]={"","Science and Mathematics","Country","Food","Computer","Animal"};
-	char guys[6][52][152];
-	char score[6][52][10];
+	char cate[7][52]={"","Science and Mathematics","Country","Food","Computer","Animal"};
+	char guys[7][52][152];
+	char score[7][52][10];
 	char massive[8000], clock[52]="";
 	char current[102]="";
 	int sc=1,sg=1, i=0,j=0;
@@ -1025,7 +1025,7 @@ int score()/*Secondary Objective*/
 	else
 	{
 		txt = fopen("Scoreboard.txt", "w");
-		fputs("**+*+*+*+*++", txt);
+		fputs("**+*+*+*+*+*++", txt);
 		fclose(txt);
 	}
 	memset(current, 0, strlen(current));
@@ -1048,7 +1048,7 @@ int score()/*Secondary Objective*/
 			{
 				if(strlen(guys[1][i]))
 				{
-					printf("    %s\t---\t%s\n",guys[1][i],score[1][i]);
+					printf("%2d:    %s\t---\t%s\n",51-i,guys[1][i],score[1][i]);
 				}
 			}
 			printf("\nPress any key to continue.");
@@ -1061,7 +1061,7 @@ int score()/*Secondary Objective*/
 			{
 				if(strlen(guys[2][i]))
 				{
-					printf("    %s\t---\t%s\n",guys[2][i],score[2][i]);
+					printf("%2d:    %s\t---\t%s\n",51-i,guys[2][i],score[2][i]);
 				}
 			}
 			printf("\nPress any key to continue.");
@@ -1074,7 +1074,7 @@ int score()/*Secondary Objective*/
 			{
 				if(strlen(guys[3][i]))
 				{
-					printf("    %s\t---\t%s\n",guys[3][i],score[3][i]);
+					printf("%2d:    %s\t---\t%s\n",51-i,guys[3][i],score[3][i]);
 				}
 			}
 			printf("\nPress any key to continue.");
@@ -1087,7 +1087,7 @@ int score()/*Secondary Objective*/
 			{
 				if(strlen(guys[4][i]))
 				{
-					printf("    %s\t---\t%s\n",guys[4][i],score[4][i]);
+					printf("%2d:    %s\t---\t%s\n",51-i,guys[4][i],score[4][i]);
 				}
 			}
 			printf("\nPress any key to continue.");
@@ -1100,7 +1100,7 @@ int score()/*Secondary Objective*/
 			{
 				if(strlen(guys[5][i]))
 				{
-					printf("    %s\t---\t%s\n",guys[5][i],score[5][i]);
+					printf("%2d:    %s\t---\t%s\n",51-i,guys[5][i],score[5][i]);
 				}
 			}
 			printf("\nPress any key to continue.");
@@ -1113,11 +1113,11 @@ int score()/*Secondary Objective*/
 
 int write_score(char title[],char name[], int point)
 {
-	char cate[6][52]={"","Science and Mathematics","Country","Food","Computer","Animal"};
-	char guys[6][52][152]={""};
-	char score[6][52][10]={""};
+	char cate[7][52]={"","Science and Mathematics","Country","Food","Computer","Animal"};
+	char guys[7][52][152]={""};
+	char score[7][52][10]={""};
 	char massive[8000]="", clock[52]="";
-	int sc=1,sg=1, i=0,j=0, people[6]={0};
+	int sc=1,sg=1, i=0,j=0, people[7]={0};
 	FILE *txt;
 	time_t t;
     time(&t);
@@ -1163,16 +1163,16 @@ int write_score(char title[],char name[], int point)
 		fclose(txt);
 	}
 	if(strlen(name)==0)
-		strcpy(name,"I have no name");
+		strcpy(name,"-.I HAVE NO NAME.-");
 	strcpy(clock,ctime(&t));
 	clock[strcspn(clock, "\n")] = 0;
 	strcat(clock, " - ");
 	strcat(clock, name);
-	for(i=1;i<=5;i++)
+	for(i=1;i<=6;i++)
 		if(strcmp(cate[i], title)==0)
 		{
 			for(j=1;j<=51;j++)
-				if(strlen(guys[i][j])==0)
+				if(strlen(guys[i][j])==0 || j==51)
 				{
 					strcpy(guys[i][j], clock);
 					sprintf(score[i][j], "%d", point);
@@ -1181,11 +1181,11 @@ int write_score(char title[],char name[], int point)
 				}
 			break;
 		}
-	printf("%s %s %d %s %s", title, name, point, guys[i][j], score[i][j]);
+	printf("Save Completed: %s\t---\t%s\n\nPress any keys to continue.\n\n", guys[i][j], score[i][j]);
 	getch();
 	fopen("Scoreboard.txt", "w");
 	fputs("*" , txt);
-	for(i=1;i<=5;i++)
+	for(i=1;i<=6;i++)
 	{
 		if(strlen(guys[i][51]))
 		{
@@ -1386,6 +1386,7 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 			printf("Type \'n\' to Proceed to highscore.\n");
 			printf("Type \'q\' to quit to category selection.\n");
 			while(1){
+				printf("\n\nYour input: ");
 				fgets (input, 52, stdin);
 				input[strcspn(input, "\n")] = 0;
 				if(strcmp(input,"r")==0)
