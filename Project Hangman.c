@@ -1288,7 +1288,7 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 			cha_al[find(cha, tolower(alpha[rng]))]=1;
 		}
 		memset(message, 0, strlen(message));
-		while(!(strcmp(input, "quit")==0 ||check('*', current)==0 || life==9))
+		while(!(strcmp(input, "quit")==0 || life==9))
 		{
 			clear();
 			printf("+*-Singleplayer.*+\n");
@@ -1308,6 +1308,12 @@ int play(char title[52], char vocab[51][52], char hint[51][102], char desc[102],
 				printf("Type \'hint\' to reveal a hint.\nHints uses 5 scores so think it through.\n");
 			printf("Type \'quit\' to return to category selection.\n");
 			printf("\n\nAnswer: ");
+			if(check('*', current)==0)
+				{
+					printf("You have completed the word, press any key to proceed.\n");
+					getchar();
+					break;
+				}
 			fgets (input, 52, stdin);
 			input[strcspn(input, "\n")] = 0;
 			for(i=0;i<strlen(input);i++)
@@ -1680,7 +1686,7 @@ int man(int in)
      	}
         else if (in == 0)
         {
-         printf("\n\n");	
+         printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");	
 		}
 }
 
