@@ -16,7 +16,7 @@ int main()
 	printf("        +11O88   ++     88  ++     88   ++11OO88           \n\n");
 	printf("                     +1O88    ++11OO888                    \n");
 	printf("                   ++     88  ++                           \n");
-    printf("                   ++     88  ++11O88                      \n");
+    	printf("                   ++     88  ++11O88                      \n");
 	printf("                   ++     88  ++                           \n");
 	printf("                     +1O88    ++                           \n\n");
 	printf("       ++     88     1O8     ++     88    +11O88           \n");
@@ -48,7 +48,7 @@ int main()
 		if(input[0]=='2')
 		{
 			clear();
-			system("mode 120,100");
+			system("mode 60,85");
 			multi();/*Multiplayer*/
 		}
 		if(input[0]=='3')
@@ -64,6 +64,7 @@ int main()
 		}
 		if(input[0]=='5')
 		{
+			clear();
 			credit();/*Print our awesome names*/
 		}
 		if(input[0]=='6')
@@ -204,7 +205,7 @@ int multi()
 	printf("\n");
 	
 	
-	printf("\nPlease enter a number of round: ");
+	printf("\nPlease enter a number of round <0 to exit>: ");
 	fgets(round, 99, stdin);
 	
 	rounds = atoi(round);
@@ -1222,6 +1223,7 @@ int credit()
 	printf("  from King Mongkut's Institute of Technology Ladkrabang.\n\n");
 	printf("Copyright 2015\n\n");
 	printf("***********************************************************\n\n");
+	printf("Press any keys to return.");
 	getchar();
 	return 31337;
 }
